@@ -1,0 +1,86 @@
+---
+title: "Example Starter R Script"
+output: html_document
+---
+
+## Introduction and background
+This is meant to be a sample starter script if you choose to use R for this case study. This is not comprehensive of everything you'll do in the case study, but should be used as a starting point if it is helpful for you.
+
+```{r}
+install.packages('tidyverse')
+library(tidyverse)
+setwd("C:\\Users\\Kevin\\Desktop\\homework\\CaseStudy1")
+```
+
+
+## Loading your CSV files
+Here we'll create a dataframe named 'stations' and read in one of the CSV files from the dataset.
+
+```{r}
+stations <- read.csv("Divvy_Stations_2014-Q1Q2.csv")
+```
+
+We'll create another dataframe for the trips data. 
+```{r}
+trips <- read.csv("Divvy_Trips_2014_Q1Q2.csv")
+```
+
+## Exploring a few key tables
+
+Take a look at the stations data.
+```{r}
+head(stations)
+```
+
+Identify all the columsn in the stations data.
+```{r}
+colnames(stations)
+```
+
+Take a look at the trips data.
+```{r}
+head(trips)
+```
+
+Identify all the columsn in the trips data.
+```{r}
+colnames(trips)
+```
+
+Note that both datasets have the 'Id' field - this can be used to merge the datasets.
+
+## Understanding some summary statistics
+How many unique participants are there in each dataframe? It looks like there may be more participants in the stations dataset than the trips dataset.
+
+```{r distinct users}
+n_distinct(stations$id)
+n_distinct(trips$trip_id)
+```
+
+How many observations are there in each dataframe?
+```{r observations}
+nrow(stations)
+nrow(trips)
+```
+Merge data to 1 data frame by using start point and stations name
+```{r}
+stations_trips <- merge(stations, trips, by.x=c("id"), by.y=c("from_station_id"))
+```
+
+
+
+What are some quick summary statistics we'd want to know about each data frame?
+
+For the stations dataframe:
+```{r}
+stations_trips %>%  
+  select(dpcapacity,
+         tripduration) %>%
+  summary()
+```
+
+Calculate the group of male and female of subscriber of lending bikes
+```{r}
+user_summanry <- stations_trips %>%  
+  count(usertype, gender, sort=TRUE)
+```
